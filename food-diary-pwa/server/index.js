@@ -75,13 +75,13 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(frontendPath));
 
-  // ✅ 최신 Express(5.x) 대응: path-to-regexp 오류 방지
-  app.get("/:path(*)", (req, res) => {
+  // ✅ 핵심 수정: 정규식 라우트로 모든 요청 처리
+  app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
-// ✅ Render 등 환경에서 PORT 설정
+// ✅ Render, Vercel 등은 PORT 환경변수 사용
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
