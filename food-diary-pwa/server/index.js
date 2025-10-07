@@ -17,7 +17,6 @@ app.get("/api/search", async (req, res) => {
   if (!q) return res.json({ items: [] });
 
   try {
-    // 1️⃣ 네이버 검색 API (지역/장소)
     const r = await fetch(
       `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(q)}&display=8`,
       {
@@ -29,7 +28,6 @@ app.get("/api/search", async (req, res) => {
     );
     const data = await r.json();
 
-    // 2️⃣ 각 결과를 좌표로 변환 (Geocoding API)
     const items = await Promise.all(
       (data.items || []).map(async (p, idx) => {
         const name = p.title.replace(/<\/?b>/g, "");
@@ -70,21 +68,20 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
-// ✅ 프로덕션 모드: Vite 프론트엔드 제공
+// ✅ 프로덕션 모드: 프론트엔드 정적 파일 제공
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const frontendPath = path.join(__dirname, "../dist");
 
-  // 정적 파일 제공
   app.use(express.static(frontendPath));
 
-  // 🩷 핵심 수정: path-to-regexp 오류 해결 ("/*" → "*")
-  app.get("*", (req, res) => {
+  // ✅ 최신 Express(5.x) 대응: path-to-regexp 오류 방지
+  app.get("/:path(*)", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
-// ✅ Render, Vercel 등은 PORT 환경변수 사용
+// ✅ Render 등 환경에서 PORT 설정
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
