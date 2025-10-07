@@ -6,8 +6,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 dotenv.config();
+
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 // ✅ 네이버 장소 검색 API 프록시
 app.get("/api/search", async (req, res) => {
@@ -68,15 +70,16 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
-// ✅ 로컬/배포 모드 분기
+// ✅ 프로덕션 모드: Vite 프론트엔드 제공
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const frontendPath = path.join(__dirname, "../dist");
 
+  // 정적 파일 제공
   app.use(express.static(frontendPath));
 
-  // 🩷 핵심 수정: 정규식 대신 와일드카드 경로로 안정 처리
-  app.get("/*", (req, res) => {
+  // 🩷 핵심 수정: path-to-regexp 오류 해결 ("/*" → "*")
+  app.get("*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
