@@ -17,9 +17,7 @@ app.get("/api/search", async (req, res) => {
   try {
     // 1️⃣ 네이버 검색 API (지역/장소)
     const r = await fetch(
-      `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(
-        q
-      )}&display=8`,
+      `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(q)}&display=8`,
       {
         headers: {
           "X-Naver-Client-Id": process.env.NAVER_DEV_CLIENT_ID,
@@ -39,9 +37,7 @@ app.get("/api/search", async (req, res) => {
         if (address) {
           try {
             const g = await fetch(
-              `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(
-                address
-              )}`,
+              `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`,
               {
                 headers: {
                   "X-NCP-APIGW-API-KEY-ID": process.env.NAVER_CLIENT_ID,
@@ -79,13 +75,14 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
+  // 🩷 핵심 수정: 정규식 대신 와일드카드 경로로 안정 처리
+  app.get("/*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
 // ✅ Render, Vercel 등은 PORT 환경변수 사용
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`✅ Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
