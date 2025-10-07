@@ -1,0 +1,16 @@
+{
+  "name": "My 핫플 Diary",
+  "short_name": "HotplaceDiary",
+  "description": "귀엽고 감성적인 핫플 다이어리 앱 ☕📔",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FF9AA2",
+  "icons": [
+    {
+      "src": "/diary_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

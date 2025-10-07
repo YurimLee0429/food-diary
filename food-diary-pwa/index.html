@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- ✅ 앱 아이콘 (파비콘) -->
+    <link rel="icon" type="image/png" href="/diary_icon.png" />
+
+    <!-- ✅ PWA 매니페스트 연결 -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- ✅ 기본 메타 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FF9AA2" />
+
+    <!-- ✅ 앱 제목 및 설명 -->
+    <title>My 핫플 Diary</title>
+    <meta name="description" content="귀엽고 감성적인 핫플 다이어리 앱 ☕📔" />
+
+    <!-- ✅ iOS용 추가 설정 (홈화면 아이콘, 상태바 색상 등) -->
+    <link rel="apple-touch-icon" href="/diary_icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="My 핫플 Diary" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- ✅ Vite + React 진입 파일 -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ✅ 서비스 워커 등록 스크립트 -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((reg) => console.log('✅ Service Worker registered:', reg))
+            .catch((err) => console.log('❌ Service Worker failed:', err));
+        });
+      }
+    </script>
+  </body>
+</html>
