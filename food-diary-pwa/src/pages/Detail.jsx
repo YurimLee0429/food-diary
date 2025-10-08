@@ -40,9 +40,9 @@ export default function Detail() {
       <div className="sticky top-0 z-10 bg-[var(--bg)] flex justify-between items-center pb-2 mb-4">
         <button
           className="px-3 py-1 text-gray-600 hover:underline"
-          onClick={() => nav(-1)}
+          onClick={() => nav("/")}
         >
-          〈 뒤로
+          〈 목록 보기
         </button>
         <button
           className="px-4 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"

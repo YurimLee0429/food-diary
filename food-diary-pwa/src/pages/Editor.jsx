@@ -109,9 +109,9 @@ export default function Editor() {
       <div className="flex justify-between items-center mb-4">
         <button
           className="text-gray-500 hover:text-gray-700"
-          onClick={() => nav(-1)}
+          onClick={() => nav("/")}
         >
-          〈 뒤로
+          〈 목록 보기
         </button>
         <div className="flex gap-2">
           <button
