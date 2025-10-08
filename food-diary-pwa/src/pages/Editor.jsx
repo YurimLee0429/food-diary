@@ -77,7 +77,7 @@ export default function Editor() {
     }
 
     setError("");
-    await saveEntry(form); // ✅ 이 시점에만 DB 저장
+    await saveEntry(form);
     nav(`/detail/${form.id}`);
   };
 
@@ -184,7 +184,7 @@ export default function Editor() {
           <img
             src={form.mainPhotoUrl}
             alt="미리보기"
-            className="mt-2 rounded-lg shadow-sm border w-40"
+            className="mt-2 rounded-lg shadow-sm border w-40 sm:w-48"
           />
         )}
       </div>
@@ -226,7 +226,7 @@ export default function Editor() {
       {/* ✅ 스티커 */}
       <div className="mb-3">
         <h3 className="font-semibold text-lg">스티커</h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 justify-start">
           {[
             "🌸", "🌻", "🌼", "🌷", "🍀", "🎈", "🎉", "✨",
             "💕", "⭐", "☕", "🍰", "🍜", "🍣", "🍔", "🍕",
@@ -262,7 +262,7 @@ export default function Editor() {
       </div>
 
       {/* ✏️ 펜 / 지우개 툴바 */}
-      <div className="sticky top-2 bg-white/80 z-30 flex flex-wrap gap-2 p-2 rounded-md shadow mb-2">
+      <div className="sticky top-2 bg-white/80 z-30 flex flex-wrap gap-2 p-2 rounded-md shadow mb-4 overflow-x-auto">
         <button
           onClick={() => setIsDrawingMode((v) => !v)}
           className={`px-2 py-1 rounded-md text-sm ${
@@ -289,7 +289,8 @@ export default function Editor() {
             >
               🧽 지우개
             </button>
-            <div className="flex gap-1 ml-2">
+
+            <div className="flex flex-wrap gap-1 ml-2">
               {COLORS.map((c) => (
                 <button
                   key={c}
@@ -345,7 +346,7 @@ export default function Editor() {
       {/* ✅ 메모 모달 */}
       {memoOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white rounded-lg shadow p-4 w-96">
+          <div className="bg-white rounded-lg shadow p-4 w-11/12 sm:w-96">
             <h3 className="font-semibold mb-2">메모 작성</h3>
             <textarea
               className="w-full border rounded p-2 h-40"
