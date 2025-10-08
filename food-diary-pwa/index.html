@@ -13,6 +13,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#FF9AA2" />
 
+    <!-- ✅ 라이트모드 강제 고정 -->
+    <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      html,
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #fff !important;
+          color: #000 !important;
+        }
+      }
+    </style>
+
     <!-- ✅ 앱 제목 및 설명 -->
     <title>My 핫플 Diary</title>
     <meta name="description" content="귀엽고 감성적인 핫플 다이어리 앱 ☕📔" />
@@ -32,14 +53,18 @@
 
     <!-- ✅ 서비스 워커 등록 스크립트 -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register('/sw.js')
-            .then((reg) => console.log('✅ Service Worker registered:', reg))
-            .catch((err) => console.log('❌ Service Worker failed:', err));
+            .register("/sw.js")
+            .then((reg) => console.log("✅ Service Worker registered:", reg))
+            .catch((err) => console.log("❌ Service Worker failed:", err));
         });
       }
+
+      // ✅ 강제 라이트모드 유지 (브라우저/OS 설정 무시)
+      document.documentElement.style.colorScheme = "light";
+      document.querySelector("meta[name='color-scheme']")?.setAttribute("content", "light");
     </script>
   </body>
 </html>

@@ -9,12 +9,10 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // ✅ 데이터 불러오기
   useEffect(() => {
     (async () => setEntries(await loadEntries()))();
   }, []);
 
-  // ✅ 검색 필터
   const filtered = entries.filter((e) => {
     const q = query.toLowerCase();
     return (
@@ -24,24 +22,20 @@ export default function List() {
     );
   });
 
-  // ✅ 페이지 계산
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
   const currentItems = filtered.slice(startIdx, startIdx + itemsPerPage);
 
-  // ✅ 삭제
   async function handleDelete(id) {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     await deleteEntry(id);
     setEntries(await loadEntries());
   }
 
-  // ✅ 주소 기반 네이버 지도 열기
   function openNaverMapByAddress(address) {
     if (!address) return alert("주소 정보가 없습니다 😢");
     const encoded = encodeURIComponent(address);
     const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
     if (mobile) {
       const appUrl = `nmap://search?query=${encoded}&appname=com.example.myapp`;
       const fallback = `https://map.naver.com/v5/search/${encoded}`;
@@ -54,46 +48,34 @@ export default function List() {
 
   return (
     <div
-      className="w-full min-h-screen p-4 sm:max-w-2xl sm:mx-auto transition-colors"
+      className="w-full min-h-screen p-4 sm:max-w-2xl sm:mx-auto transition-colors relative"
       style={{ backgroundColor: "var(--bg)" }}
     >
-      {/* 💜 타이틀 영역 */}
+      {/* 💜 타이틀 */}
       <div className="text-center mb-8 mt-2">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-2 tracking-wide"
-          style={{
-            color: "var(--primary)",
-            fontFamily: "inherit",
-          }}
+          style={{ color: "var(--primary)" }}
         >
           My List
         </h1>
-        <p
-          className="text-gray-600 text-sm sm:text-base"
-          style={{ fontFamily: "inherit" }}
-        >
+        <p className="text-gray-600 text-sm sm:text-base">
           나만의 맛집 & 카페 & 핫플 기록 다이어리 ☕🍰💕
         </p>
-        <div
-          className="flex justify-center items-center gap-3 mt-2"
-        ><span
-          className="w-10 h-[2px] rounded transition-colors"
-          style={{ backgroundColor: "var(--primary)" }}
-        ></span>
+        <div className="flex justify-center items-center gap-3 mt-2">
           <span
-            className="transition-colors"
-            style={{ color: "var(--primary)" }}
-          >
-            🌷
-          </span>
-          <span
-            className="w-10 h-[2px] rounded transition-colors"
+            className="w-10 h-[2px] rounded"
             style={{ backgroundColor: "var(--primary)" }}
-          ></span></div>
-
+          ></span>
+          <span style={{ color: "var(--primary)" }}>🌷</span>
+          <span
+            className="w-10 h-[2px] rounded"
+            style={{ backgroundColor: "var(--primary)" }}
+          ></span>
+        </div>
       </div>
 
-      {/* 🔍 검색 + 작성 버튼 */}
+      {/* 🔍 검색창 */}
       <div className="flex items-center gap-2 mb-6 sticky top-0 bg-[var(--bg)] z-10 pb-3">
         <input
           className="flex-1 px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-[var(--primary)] outline-none"
@@ -104,37 +86,28 @@ export default function List() {
             setCurrentPage(1);
           }}
         />
+        {/* ✅ 작성 버튼 (PC 전용) */}
         <button
-          className="px-4 py-2 rounded-full text-white font-semibold shadow-md transition-all duration-200"
+          className="hidden sm:block px-4 py-2 rounded-full text-white font-semibold shadow-md transition-all duration-200"
           style={{
             backgroundColor: "var(--primary)",
             boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
           }}
           onClick={() => nav("/new")}
-          onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor =
-            "color-mix(in srgb, var(--primary) 85%, white 15%)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "var(--primary)")
-          }
         >
           ＋ 작성
         </button>
       </div>
 
-      {/* 📘 카드 목록 */}
+      {/* 📘 리스트 */}
       {currentItems.length === 0 && (
         <div className="text-center mt-16 text-gray-500">
-          <div
-            className="text-5xl mb-3"
-            style={{ color: "var(--primary)" }}
-          >
+          <div className="text-5xl mb-3" style={{ color: "var(--primary)" }}>
             📔
           </div>
           <p className="text-gray-700">등록된 다이어리가 없습니다.</p>
           <p className="text-sm mt-1 text-gray-400">
-            오른쪽 상단의 ＋ 작성 버튼을 눌러 나만의 핫플을 기록해보세요!
+            오른쪽 하단의 ＋ 버튼을 눌러 나만의 핫플을 기록해보세요!
           </p>
         </div>
       )}
@@ -146,7 +119,6 @@ export default function List() {
                      border rounded-lg sm:rounded-xl shadow-sm p-4 mb-6 w-full 
                      transition-transform duration-200 hover:scale-[1.01]"
         >
-          {/* 📷 메인 이미지 */}
           <div className="relative w-full aspect-video mb-3 overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
             {e.mainPhotoUrl && e.mainPhotoUrl.startsWith("data:image") ? (
               <img
@@ -159,7 +131,6 @@ export default function List() {
             )}
           </div>
 
-          {/* 🏷 제목 + 주소 */}
           <div className="flex justify-between items-start">
             <div>
               <h3
@@ -180,7 +151,6 @@ export default function List() {
               </small>
             </div>
 
-            {/* 🎛 오른쪽 버튼 그룹 */}
             <div className="flex flex-col gap-1 text-sm text-right items-end">
               <button
                 className="px-2 py-1 text-gray-600 hover:underline"
@@ -240,6 +210,19 @@ export default function List() {
           </button>
         </div>
       )}
+
+      {/* ✅ 추가: 모바일에서 버튼 밀릴 때 대비용 플로팅 버튼 (PC엔 안 보임) */}
+      <button
+        className="sm:hidden fixed bottom-6 right-5 px-5 py-3 rounded-full shadow-lg text-white text-base font-semibold flex items-center justify-center"
+        style={{
+          backgroundColor: "var(--primary)",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
+          zIndex: 50,
+        }}
+        onClick={() => nav("/new")}
+      >
+        ＋ 작성하기
+      </button>
     </div>
   );
 }

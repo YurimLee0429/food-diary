@@ -24,6 +24,18 @@ export default function StickerCanvas({
   });
   const [isDrawing, setIsDrawing] = useState(false);
 
+  // ✅ 강제 라이트모드 유지 (모바일 Safari/Chrome)
+  useEffect(() => {
+    document.documentElement.style.colorScheme = "light";
+    let meta = document.querySelector('meta[name="color-scheme"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "color-scheme";
+      document.head.appendChild(meta);
+    }
+    meta.content = "light";
+  }, []);
+
   // ✅ 반응형 크기 조정
   useEffect(() => {
     const handleResize = () =>
@@ -32,7 +44,20 @@ export default function StickerCanvas({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Interact.js 설정 (스티커 이동 / 회전 / 리사이즈)
+  // ✅ 모바일 터치 안정화 (iOS 줌/스크롤 튐 방지)
+  useEffect(() => {
+    const preventGesture = (e) => e.preventDefault();
+    document.addEventListener("gesturestart", preventGesture);
+    document.addEventListener("gesturechange", preventGesture);
+    document.addEventListener("gestureend", preventGesture);
+    return () => {
+      document.removeEventListener("gesturestart", preventGesture);
+      document.removeEventListener("gesturechange", preventGesture);
+      document.removeEventListener("gestureend", preventGesture);
+    };
+  }, []);
+
+  // ✅ Interact.js (스티커 이동 / 회전 / 리사이즈)
   useEffect(() => {
     if (!containerRef.current || readOnly) return;
 
@@ -40,7 +65,7 @@ export default function StickerCanvas({
       .draggable({
         listeners: {
           move(event) {
-            if (isDrawingMode) return; // 🎨 펜모드일 때 드래그 비활성화
+            if (isDrawingMode) return;
             const t = event.target;
             const id = t.dataset.layer;
             const x = (parseFloat(t.dataset.x) || 0) + event.dx;
@@ -57,8 +82,7 @@ export default function StickerCanvas({
             if (isDrawingMode) return;
             const t = event.target;
             const id = t.dataset.layer;
-            const scale =
-              (parseFloat(t.dataset.scale) || 1) * (1 + event.ds);
+            const scale = (parseFloat(t.dataset.scale) || 1) * (1 + event.ds);
             const rotation =
               (parseFloat(t.dataset.rot) || 0) + event.da;
             t.dataset.scale = scale;
@@ -85,7 +109,7 @@ export default function StickerCanvas({
       });
   }, [onChange, readOnly, isDrawingMode]);
 
-  // ✅ 드로잉 초기화 및 기존 그림 로드
+  // ✅ 기존 그림 불러오기
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -94,7 +118,6 @@ export default function StickerCanvas({
     ctx.lineJoin = "round";
     ctx.lineWidth = 3;
 
-    // 이전 그림 불러오기
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (existingDrawing) {
       const img = new Image();
@@ -111,9 +134,10 @@ export default function StickerCanvas({
     return { x, y };
   };
 
-  // ✅ 그리기 시작
+  // ✅ 그리기
   const startDraw = (e) => {
     if (!isDrawingMode || readOnly) return;
+    e.preventDefault();
     const ctx = canvasRef.current.getContext("2d");
     ctx.globalCompositeOperation = isEraser
       ? "destination-out"
@@ -124,21 +148,22 @@ export default function StickerCanvas({
     const { x, y } = getPos(e);
     ctx.moveTo(x, y);
     setIsDrawing(true);
+    document.body.style.overflow = "hidden"; // ✋ 스크롤 잠금
   };
 
-  // ✅ 그리는 중
   const draw = (e) => {
     if (!isDrawing || !isDrawingMode || readOnly) return;
+    e.preventDefault();
     const ctx = canvasRef.current.getContext("2d");
     const { x, y } = getPos(e);
     ctx.lineTo(x, y);
     ctx.stroke();
   };
 
-  // ✅ 그리기 끝
   const endDraw = () => {
     if (!isDrawingMode) return;
     setIsDrawing(false);
+    document.body.style.overflow = "auto";
     const dataUrl = canvasRef.current.toDataURL("image/png");
     if (onDrawEnd) onDrawEnd(dataUrl);
   };
@@ -155,14 +180,24 @@ export default function StickerCanvas({
       ? "0.5px solid #94a3b8"
       : "1.5px solid #94a3b8";
 
+  // ✅ 모바일 여부 감지
+  const isMobile = size.width < 768;
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[640px] border rounded-lg shadow-inner overflow-hidden"
+      className="relative border rounded-lg shadow-inner overflow-hidden canvas-area"
       style={{
         background: `color-mix(in srgb, var(--bg) 90%, var(--primary) 10%)`,
         border,
         margin: "0 auto",
+        width: "100%",
+        maxWidth: "700px",
+        height: isMobile ? "auto" : "640px", // PC는 고정, 모바일은 자동
+        aspectRatio: isMobile ? "640 / 670" : "unset", // 모바일만 비율 유지
+        touchAction: "none",
+        WebkitUserSelect: "none",
+        userSelect: "none",
       }}
     >
       {/* ✏️ 드로잉 캔버스 */}
@@ -173,6 +208,10 @@ export default function StickerCanvas({
         className={`absolute inset-0 z-10 transition-all ${
           isDrawingMode ? "cursor-crosshair" : "pointer-events-none"
         }`}
+        style={{
+          width: "100%",
+          height: isMobile ? "auto" : "100%",
+        }}
         onMouseDown={startDraw}
         onMouseMove={draw}
         onMouseUp={endDraw}
@@ -190,8 +229,8 @@ export default function StickerCanvas({
             top: 110,
             left: "50%",
             transform: "translateX(-50%)",
-            width: Math.min(size.width * 0.25, 200),
-            height: (Math.min(size.width * 0.25, 200) * 3) / 4,
+            width: Math.min(size.width * 0.25, isMobile ? 150 : 200),
+            height: (Math.min(size.width * 0.25, isMobile ? 150 : 200) * 3) / 4,
             backgroundImage: `url(${mainPhotoUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -207,8 +246,8 @@ export default function StickerCanvas({
         className="absolute left-1/2 transform -translate-x-1/2 bg-white/90 rounded-lg shadow-md flex items-center justify-center"
         style={{
           top: "45%",
-          width: "50%",
-          minHeight: 160,
+          width: isMobile ? "80%" : "50%",
+          minHeight: isMobile ? "22vh" : 160,
           border,
           padding: 16,
           textAlign: "center",
