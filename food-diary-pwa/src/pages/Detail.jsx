@@ -101,6 +101,7 @@ export default function Detail() {
           lineStyle={item.lineStyle}
           memo={item.memo}
           readOnly={true}
+          existingDrawing={item.drawing}
         />
       </div>
 
