@@ -140,24 +140,7 @@ export default function ThemePicker() {
         </div>
 
         {/* 글자색 */}
-        <div>
-          <h3 className="text-lg font-semibold mb-2">글자색</h3>
-          <div className="flex flex-wrap gap-3 justify-center">
-            {COLORS.map((c) => (
-              <button
-                key={c}
-                onClick={() => {
-                  setColor(c);
-                  applyTheme(font, c, theme);
-                }}
-                className={`w-10 h-10 rounded-full border transition hover:scale-110 ${
-                  color === c ? "ring-2 ring-offset-2 ring-blue-500" : ""
-                }`}
-                style={{ background: c }}
-              />
-            ))}
-          </div>
-        </div>
+      
       </div>
     </div>
   );
