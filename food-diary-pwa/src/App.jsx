@@ -5,18 +5,46 @@ import Detail from "./pages/Detail.jsx";
 import Editor from "./pages/Editor.jsx";
 import ThemePicker from "./pages/ThemePicker.jsx";
 
-// 👉 폰트 및 테마
 const FONTS = {
-  malgun: '"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",sans-serif',
-  roboto: 'Roboto,"Helvetica Neue",Arial,system-ui,sans-serif',
-  nanum: '"Nanum Pen Script","Comic Neue","Patrick Hand",cursive',
-  gothic: '"Noto Sans KR","Apple SD Gothic Neo","Segoe UI",sans-serif',
-  serif: 'Georgia,"Times New Roman",serif',
-  comic: '"Comic Sans MS","Comic Neue","Patrick Hand",cursive',
-  courier: '"Courier New","Menlo","Monaco",monospace',
-  futura: 'Futura,"Avenir Next","Nunito",sans-serif',
-  garamond: '"Garamond","EB Garamond","Times New Roman",serif',
-  impact: '"Impact","Anton","Bebas Neue",sans-serif',
+  // ✅ 한글 기본 (PC / iOS / Android 안정)
+  malgun:
+    '"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+
+  // ✅ Android 기준 + 전역 fallback
+  roboto:
+    'Roboto,"Helvetica Neue","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,Arial,sans-serif',
+
+  // 🎨 감성 필기체 (웹폰트 있으면 베스트)
+  nanum:
+    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+
+  // ✅ 한글 고딕 안전
+  gothic:
+    '"Noto Sans KR","Apple SD Gothic Neo","Segoe UI",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+
+  // ⚠️ iOS 일부만 Georgia → 안전 fallback
+  serif:
+    'Georgia,"Times New Roman","Noto Serif KR",-apple-system,system-ui,serif',
+
+  // ⚠️ Comic Sans 모바일 미지원 → 감성 대체
+  comic:
+    '"Comic Sans MS","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+
+  // ⚠️ 모바일 Courier 없음 → monospace 안전
+  courier:
+    '"Courier New","Menlo","Monaco","SFMono-Regular","Noto Sans Mono",monospace',
+
+  // ⚠️ PC 장식용 → 모바일 대체
+  futura:
+    'Futura,"Avenir Next","Nunito",-apple-system,system-ui,sans-serif',
+
+  // ⚠️ 고전체 → serif 대체
+  garamond:
+    '"Garamond","EB Garamond","Noto Serif KR","Times New Roman",serif',
+
+  // ⚠️ 제목용 → 모바일 대체
+  impact:
+    '"Impact","Anton","Bebas Neue","Arial Black",-apple-system,system-ui,sans-serif',
 };
 
 const THEMES = {

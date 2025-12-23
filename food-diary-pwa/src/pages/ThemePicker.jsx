@@ -1,20 +1,34 @@
 import { useEffect, useState } from "react";
 
-// 폰트 10종
+/* =====================
+   폰트
+===================== */
 const FONTS = {
-  malgun: '"Malgun Gothic","맑은 고딕",sans-serif',
-  roboto: "Roboto,system-ui,sans-serif",
-  nanum: '"Nanum Pen Script",cursive',
-  gothic: '"Noto Sans KR",sans-serif',
-  serif: "Georgia,serif",
-  comic: '"Comic Sans MS",cursive',
-  courier: '"Courier New",monospace',
-  futura: "Futura,sans-serif",
-  garamond: "Garamond,serif",
-  impact: "Impact,sans-serif",
+  malgun:
+    '"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+  roboto:
+    'Roboto,"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+  nanum:
+    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+  gothic:
+    '"Noto Sans KR","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+  serif:
+    'Georgia,"Times New Roman","Noto Serif KR",-apple-system,system-ui,serif',
+  comic:
+    '"Comic Sans MS","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+  courier:
+    '"Courier New","SFMono-Regular","Menlo","Monaco","Noto Sans Mono",monospace',
+  futura:
+    'Futura,"Avenir Next","Nunito",-apple-system,system-ui,sans-serif',
+  garamond:
+    '"Garamond","EB Garamond","Noto Serif KR","Times New Roman",serif',
+  impact:
+    '"Impact","Anton","Bebas Neue","Arial Black",-apple-system,system-ui,sans-serif',
 };
 
-// 테마 (배경 + 메인 색상)
+/* =====================
+   테마 (App.jsx 기준과 동일)
+===================== */
 const THEMES = {
   A: { name: "하늘", background: "#E7F5FF", primary: "#74C0FC" },
   B: { name: "핑크", background: "#f9d9e0ff", primary: "#F783AC" },
@@ -29,40 +43,27 @@ const THEMES = {
   K: { name: "블랙&화이트", background: "#FFFFFF", primary: "#000000" },
 };
 
-// 글자색 팔레트
-const COLORS = [
-  "#000000", "#1f2937", "#ef4444", "#f59e0b",
-  "#10b981", "#0ea5e9", "#6366f1", "#db2777", "#334155"
-];
-
-// ✅ 공통 적용 함수
-function applyTheme(fnt, clr, th) {
+/* =====================
+   테마 적용
+===================== */
+function applyTheme(fnt, th) {
   const t = THEMES[th] || THEMES.K;
+
   document.documentElement.style.setProperty("--bg", t.background);
   document.documentElement.style.setProperty("--primary", t.primary);
   document.body.style.fontFamily = FONTS[fnt] || FONTS.malgun;
-  document.body.style.color = clr;
 
-  // 저장
   localStorage.setItem("APP_FONT", fnt);
-  localStorage.setItem("APP_COLOR", clr);
   localStorage.setItem("APP_THEME", th);
 }
 
 export default function ThemePicker() {
   const [font, setFont] = useState("malgun");
-  const [color, setColor] = useState("#000000");
   const [theme, setTheme] = useState("K");
 
-  // ✅ 첫 로드 시 저장된 설정 불러오기
   useEffect(() => {
-    const f = localStorage.getItem("APP_FONT") || "malgun";
-    const c = localStorage.getItem("APP_COLOR") || "#000000";
-    const t = localStorage.getItem("APP_THEME") || "K";
-    setFont(f);
-    setColor(c);
-    setTheme(t);
-    applyTheme(f, c, t);
+    setFont(localStorage.getItem("APP_FONT") || "malgun");
+    setTheme(localStorage.getItem("APP_THEME") || "K");
   }, []);
 
   return (
@@ -70,8 +71,10 @@ export default function ThemePicker() {
       className="w-full min-h-screen flex items-center justify-center"
       style={{ backgroundColor: "var(--bg)" }}
     >
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6 space-y-6">
-        <h2 className="text-2xl font-bold text-center">🎨 테마 & 폰트</h2>
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 space-y-6">
+        <h2 className="text-2xl font-bold text-center">
+          🎨 테마 & 폰트
+        </h2>
 
         {/* 배경 테마 */}
         <div>
@@ -82,10 +85,10 @@ export default function ThemePicker() {
                 key={k}
                 onClick={() => {
                   setTheme(k);
-                  applyTheme(font, color, k);
+                  applyTheme(font, k);
                 }}
                 className={`px-4 py-2 rounded-lg border shadow-sm transition-transform hover:scale-105 ${
-                  theme === k ? "ring-2 ring-offset-2 ring-blue-500" : ""
+                  theme === k ? "ring-2 ring-offset-2 ring-[var(--primary)]" : ""
                 }`}
                 style={{ background: t.background, color: t.primary }}
               >
@@ -95,52 +98,24 @@ export default function ThemePicker() {
           </div>
         </div>
 
-        {/* 폰트 선택 (미리보기 적용) */}
+        {/* 폰트 */}
         <div>
           <h3 className="text-lg font-semibold mb-2">폰트</h3>
           <select
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 bg-white shadow-sm"
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-[var(--primary)] bg-white shadow-sm"
             value={font}
             onChange={(e) => {
               setFont(e.target.value);
-              applyTheme(e.target.value, color, theme);
+              applyTheme(e.target.value, theme);
             }}
           >
-            <option value="malgun" style={{ fontFamily: FONTS.malgun }}>
-              Malgun Gothic (맑은 고딕)
-            </option>
-            <option value="roboto" style={{ fontFamily: FONTS.roboto }}>
-              Roboto
-            </option>
-            <option value="nanum" style={{ fontFamily: FONTS.nanum }}>
-              Nanum Pen Script
-            </option>
-            <option value="gothic" style={{ fontFamily: FONTS.gothic }}>
-              Noto Sans KR (고딕)
-            </option>
-            <option value="serif" style={{ fontFamily: FONTS.serif }}>
-              Georgia (세리프)
-            </option>
-            <option value="comic" style={{ fontFamily: FONTS.comic }}>
-              Comic Sans
-            </option>
-            <option value="courier" style={{ fontFamily: FONTS.courier }}>
-              Courier New (타자기체)
-            </option>
-            <option value="futura" style={{ fontFamily: FONTS.futura }}>
-              Futura (Modern)
-            </option>
-            <option value="garamond" style={{ fontFamily: FONTS.garamond }}>
-              Garamond (고전체)
-            </option>
-            <option value="impact" style={{ fontFamily: FONTS.impact }}>
-              Impact (굵은 제목체)
-            </option>
+            {Object.entries(FONTS).map(([key, value]) => (
+              <option key={key} value={key} style={{ fontFamily: value }}>
+                {key}
+              </option>
+            ))}
           </select>
         </div>
-
-        {/* 글자색 */}
-      
       </div>
     </div>
   );

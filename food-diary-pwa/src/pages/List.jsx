@@ -60,7 +60,7 @@ export default function List() {
           My List
         </h1>
         <p className="text-gray-600 text-sm sm:text-base">
-          나만의 맛집 & 카페 & 핫플 기록 다이어리 ☕🍰💕
+          나만의 맛집 & 카페 & 핫플 기록 다이어리 ☕🍰
         </p>
         <div className="flex justify-center items-center gap-3 mt-2">
           <span
