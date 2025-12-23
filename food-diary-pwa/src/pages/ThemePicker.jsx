@@ -1,29 +1,23 @@
 import { useEffect, useState } from "react";
 
 /* =====================
-   폰트
+   폰트 (모바일 안정)
 ===================== */
 const FONTS = {
   malgun:
     '"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
-  roboto:
-    'Roboto,"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
-  nanum:
-    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+
   gothic:
     '"Noto Sans KR","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+
+  roboto:
+    'Roboto,"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
+
+  nanum:
+    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+
   serif:
     'Georgia,"Times New Roman","Noto Serif KR",-apple-system,system-ui,serif',
-  comic:
-    '"Comic Sans MS","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
-  courier:
-    '"Courier New","SFMono-Regular","Menlo","Monaco","Noto Sans Mono",monospace',
-  futura:
-    'Futura,"Avenir Next","Nunito",-apple-system,system-ui,sans-serif',
-  garamond:
-    '"Garamond","EB Garamond","Noto Serif KR","Times New Roman",serif',
-  impact:
-    '"Impact","Anton","Bebas Neue","Arial Black",-apple-system,system-ui,sans-serif',
 };
 
 /* =====================
@@ -88,7 +82,9 @@ export default function ThemePicker() {
                   applyTheme(font, k);
                 }}
                 className={`px-4 py-2 rounded-lg border shadow-sm transition-transform hover:scale-105 ${
-                  theme === k ? "ring-2 ring-offset-2 ring-[var(--primary)]" : ""
+                  theme === k
+                    ? "ring-2 ring-offset-2 ring-[var(--primary)]"
+                    : ""
                 }`}
                 style={{ background: t.background, color: t.primary }}
               >
@@ -109,11 +105,11 @@ export default function ThemePicker() {
               applyTheme(e.target.value, theme);
             }}
           >
-            {Object.entries(FONTS).map(([key, value]) => (
-              <option key={key} value={key} style={{ fontFamily: value }}>
-                {key}
-              </option>
-            ))}
+            <option value="malgun">맑은 고딕 (기본)</option>
+            <option value="gothic">노토 산스 KR</option>
+            <option value="roboto">Roboto</option>
+            <option value="nanum">나눔 펜 스크립트</option>
+            <option value="serif">세리프 (Georgia)</option>
           </select>
         </div>
       </div>
