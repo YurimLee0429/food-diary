@@ -15,8 +15,8 @@ const FONTS = {
   roboto:
     'Roboto,"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
 
-  nanum:
-    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+   courier:
+    '"Courier New","SFMono-Regular","Menlo","Monaco","Noto Sans Mono",monospace',
 
   serif:
     'Georgia,"Times New Roman","Noto Serif KR",-apple-system,system-ui,serif',

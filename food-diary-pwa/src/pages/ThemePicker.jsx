@@ -13,8 +13,8 @@ const FONTS = {
   roboto:
     'Roboto,"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif',
 
-  nanum:
-    '"Nanum Pen Script","Comic Neue","Patrick Hand",-apple-system,system-ui,cursive',
+   courier:
+    '"Courier New","SFMono-Regular","Menlo","Monaco","Noto Sans Mono",monospace',
 
   serif:
     'Georgia,"Times New Roman","Noto Serif KR",-apple-system,system-ui,serif',
@@ -108,7 +108,7 @@ export default function ThemePicker() {
             <option value="malgun">맑은 고딕 (기본)</option>
             <option value="gothic">노토 산스 KR</option>
             <option value="roboto">Roboto</option>
-            <option value="nanum">나눔 펜 스크립트</option>
+            <option value="courier">타자기체</option>
             <option value="serif">세리프 (Georgia)</option>
           </select>
         </div>
